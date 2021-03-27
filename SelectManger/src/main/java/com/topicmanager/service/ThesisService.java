@@ -158,6 +158,7 @@ public class ThesisService {
         thesis.setThesisFrom(thesisVo.getThesisFrom());
         thesis.setTeacher(thesisVo.getTeacher());
         thesis.setModel(thesisVo.getModel());
+        thesis.setClassroom(thesisVo.getClassroom());
         Date date = new Date();
         thesis.setThesisDate(date);
         thesis.setThesisDoc(thesisVo.getFilePath());
