@@ -2,8 +2,11 @@ package com.topicmanager.pojo;
 
 import lombok.Data;
 
+import javax.persistence.Id;
+
 @Data
 public class CollegeHead {
+    @Id
     private String headId;
     private String headName;
     private String loginName;
