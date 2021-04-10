@@ -3,8 +3,11 @@ package com.topicmanager.controller;
 import com.topicmanager.pojo.CollegeHead;
 import com.topicmanager.pojo.Thesis;
 import com.topicmanager.result.CodeMsg;
+import com.topicmanager.result.ListResult;
 import com.topicmanager.result.Result;
 import com.topicmanager.service.CollegeHeadService;
+import com.topicmanager.service.StudentService;
+import com.topicmanager.service.TeacherService;
 import com.topicmanager.service.ThesisService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,10 @@ public class CollegeHeadController {
     private CollegeHeadService collegeHeadService;
     @Autowired
     private ThesisService thesisService;
+    @Autowired
+    private StudentService studentService;
+    @Autowired
+    private TeacherService teacherService;
 
     @PostMapping("/login")
     public Result<CollegeHead> login(@Param("loginName") String loginName, @Param("headPwd") String headPwd){
@@ -35,8 +42,24 @@ public class CollegeHeadController {
     //获取学院管理员名下课题
     @GetMapping("/headThesis")
     @ResponseBody
-    public Result<List<Thesis>> getThesisByTeacherName(@Param("headId") String headId){
+    public Result<List<Thesis>> getThesisByHeadName(@Param("headId") String headId){
         List<Thesis> thesislist = thesisService.getThesisByCollegeHead(headId);
         return  Result.success(thesislist);
+    }
+    //获取学院学生
+    @GetMapping("/getstudent")
+    @ResponseBody
+    public Result<ListResult> getstudentByHeadId(@Param("pageNum")int pageNum,
+                                                  @Param("pageSize") int pageSize, @Param("headId") String headId){
+        ListResult result = studentService.getStudentByCollegeHead(pageNum,pageSize,headId);
+        return  Result.success(result);
+    }
+    //获取学院管理员名下课题
+    @GetMapping("/getteacher")
+    @ResponseBody
+    public Result<ListResult> getThesisByByHeadId(@Param("pageNum")int pageNum,
+                                                  @Param("pageSize") int pageSize,@Param("headId") String headId){
+        ListResult result = teacherService.getTeacherByCollegeHead(pageNum,pageSize,headId);
+        return  Result.success(result);
     }
 }

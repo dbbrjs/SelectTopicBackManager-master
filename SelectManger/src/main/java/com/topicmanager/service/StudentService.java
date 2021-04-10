@@ -1,19 +1,23 @@
 package com.topicmanager.service;
 
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.topicmanager.mapper.CollegeHeadMapper;
 import com.topicmanager.mapper.OrderInfoMapper;
 import com.topicmanager.mapper.StudentMapper;
 import com.topicmanager.mapper.ThesisMapper;
-import com.topicmanager.pojo.Orderinfo;
-import com.topicmanager.pojo.Student;
-import com.topicmanager.pojo.Thesis;
+import com.topicmanager.pojo.*;
+import com.topicmanager.result.ListResult;
 import com.topicmanager.utils.IDgenerator;
 import com.topicmanager.utils.ThesisStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class StudentService {
@@ -26,6 +30,8 @@ public class StudentService {
 
     @Autowired
     private ThesisMapper thesisMapper;
+    @Autowired
+    private CollegeHeadMapper collegeHeadMapper;
 
     //login
     public Student login(String loginName){
@@ -46,6 +52,19 @@ public class StudentService {
 
     public Integer editStudent(Student s) {
         return studentMapper.updateByPrimaryKey(s);
+    }
+
+    public ListResult getStudentByCollegeHead(int pageNum,int pageSize,String headId){
+        CollegeHead collegeHead = collegeHeadMapper.selectByPrimaryKey(headId);
+        PageHelper.startPage(pageNum, pageSize);
+        Example example = new Example(Student.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("college", collegeHead.getCollege());
+        List<Student> students = studentMapper.selectByExample(example);
+        int count = studentMapper.selectCountByExample(example);
+        PageInfo<Student> info = new PageInfo<>(students);
+        ListResult studentResult = new ListResult(info.getList(),count);
+        return studentResult;
     }
 
     public Integer chooseThesis(Thesis thesis, String studentId, String studentName) {
