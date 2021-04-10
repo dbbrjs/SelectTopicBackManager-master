@@ -4,8 +4,11 @@ package com.topicmanager.service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.topicmanager.enums.ApplyThesisStatusEnum;
+import com.topicmanager.enums.ThesisStatusEnum;
 import com.topicmanager.mapper.*;
 import com.topicmanager.pojo.*;
+import com.topicmanager.result.ListResult;
 import com.topicmanager.result.ThesisResult;
 import com.topicmanager.utils.IDgenerator;
 import com.topicmanager.utils.ThesisStatus;
@@ -152,7 +155,19 @@ public class ThesisService {
             return 0;   //选题失败
         }
     }
-
+    public ListResult getApplyThesisByCollegeHead(int pageNum, int pageSize, String headId){
+        CollegeHead collegeHead = collegeHeadMapper.selectByPrimaryKey(headId);
+        PageHelper.startPage(pageNum, pageSize);
+        Example example = new Example(Applythesis.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("thesisCollege", collegeHead.getCollege());
+        criteria.andNotEqualTo("thesisStatus", ApplyThesisStatusEnum.FINISH.getStatus());
+        List<Applythesis> applythesis = applyThesisMapper.selectByExample(example);
+        int count = applyThesisMapper.selectCountByExample(example);
+        PageInfo<Applythesis> info = new PageInfo<>(applythesis);
+        ListResult studentResult = new ListResult(info.getList(),count);
+        return studentResult;
+    }
 
 
     public Thesis thesisVo_thesis(ThesisVo thesisVo){
@@ -184,7 +199,7 @@ public class ThesisService {
         applythesis.setThesisCollege(thesisVo.getThesisCollege());
         applythesis.setThesisDoc(thesisVo.getFilePath());
         applythesis.setThesisFrom(thesisVo.getThesisFrom());
-        applythesis.setThesisStatus(ThesisStatus.PENDING);      //待审核状态
+        applythesis.setThesisStatus(ThesisStatusEnum.PENDING.getStatus());      //待审核状态
         applythesis.setThesisType(thesisVo.getThesisType());
         applythesis.setThesisDesc(thesisVo.getThesisDesc());
         Date date = new Date();

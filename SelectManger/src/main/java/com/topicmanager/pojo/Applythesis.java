@@ -26,6 +26,6 @@ public class Applythesis {
     private Date thesisDate;
     private String thesisDoc;         //附件
     private String teacher;           //指定教师
-    private String thesisStatus;      //审核状态
+    private Integer thesisStatus;//审核状态
     private String thesisDesc;        //简述
 }

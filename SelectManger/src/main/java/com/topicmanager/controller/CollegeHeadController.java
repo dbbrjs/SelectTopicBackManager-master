@@ -40,7 +40,7 @@ public class CollegeHeadController {
     }
 
     //获取学院管理员名下课题
-    @GetMapping("/headThesis")
+    @GetMapping("/headthesis")
     @ResponseBody
     public Result<List<Thesis>> getThesisByHeadName(@Param("headId") String headId){
         List<Thesis> thesislist = thesisService.getThesisByCollegeHead(headId);
@@ -60,6 +60,13 @@ public class CollegeHeadController {
     public Result<ListResult> getThesisByByHeadId(@Param("pageNum")int pageNum,
                                                   @Param("pageSize") int pageSize,@Param("headId") String headId){
         ListResult result = teacherService.getTeacherByCollegeHead(pageNum,pageSize,headId);
+        return  Result.success(result);
+    }
+
+    @GetMapping("/pendingthesis")
+    public Result<ListResult> getPendgingThesisByByHeadId(@Param("pageNum")int pageNum,
+                                                  @Param("pageSize") int pageSize,@Param("headId") String headId){
+        ListResult result = thesisService.getApplyThesisByCollegeHead(pageNum,pageSize,headId);
         return  Result.success(result);
     }
 }
