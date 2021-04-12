@@ -1,5 +1,6 @@
 package com.topicmanager.controller;
 
+import com.topicmanager.enums.ApplyThesisStatusEnum;
 import com.topicmanager.pojo.CollegeHead;
 import com.topicmanager.pojo.Thesis;
 import com.topicmanager.result.CodeMsg;
@@ -68,5 +69,16 @@ public class CollegeHeadController {
                                                   @Param("pageSize") int pageSize,@Param("headId") String headId){
         ListResult result = thesisService.getApplyThesisByCollegeHead(pageNum,pageSize,headId);
         return  Result.success(result);
+    }
+    @PostMapping("/confirm")
+    public Result<Void> confirm(@Param("thesisId")String thesisId){
+        thesisService.changeApplyThesisStatus(thesisId, ApplyThesisStatusEnum.FINISH.getStatus());
+        return Result.success(null);
+    }
+
+    @PostMapping("/refuse")
+    public Result<Void> refuse(@Param("thesisId")String thesisId){
+        thesisService.changeApplyThesisStatus(thesisId, ApplyThesisStatusEnum.HEAD_REFUSE.getStatus());
+        return Result.success(null);
     }
 }

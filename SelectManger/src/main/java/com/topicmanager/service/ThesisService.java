@@ -168,7 +168,12 @@ public class ThesisService {
         ListResult studentResult = new ListResult(info.getList(),count);
         return studentResult;
     }
-
+    public void changeApplyThesisStatus(String applyThesisId,Integer status){
+        Applythesis applythesis = new Applythesis();
+        applythesis.setThesisStatus(status);
+        applythesis.setThesisId(applyThesisId);
+        applyThesisMapper.updateByPrimaryKeySelective(applythesis);
+    }
 
     public Thesis thesisVo_thesis(ThesisVo thesisVo){
         Thesis thesis = new Thesis();
