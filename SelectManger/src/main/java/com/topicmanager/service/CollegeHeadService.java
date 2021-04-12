@@ -16,4 +16,8 @@ public class CollegeHeadService {
         return collegeHead;
     }
 
+
+    public void updateInfo(CollegeHead collegeHead){
+        collegeHeadMapper.updateByPrimaryKeySelective(collegeHead);
+    }
 }
