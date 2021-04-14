@@ -1,14 +1,17 @@
 package com.topicmanager.service;
 
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.topicmanager.mapper.CollegeHeadMapper;
 import com.topicmanager.mapper.StudentMapper;
 import com.topicmanager.mapper.TeacherMapper;
-import com.topicmanager.pojo.StudentThesis;
-import com.topicmanager.pojo.Teacher;
-import com.topicmanager.pojo.Thesis;
+import com.topicmanager.pojo.*;
+import com.topicmanager.result.ListResult;
 import com.topicmanager.utils.IDgenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +24,8 @@ public class TeacherService {
 
     @Autowired
     private StudentMapper studentMapper;
+    @Autowired
+    private CollegeHeadMapper collegeHeadMapper;
 
     public Teacher login(String loginName){
         Teacher teacher = teacherMapper.login(loginName);
@@ -50,6 +55,18 @@ public class TeacherService {
         return  teacherMapper.selectOne(teacher);
     }
 
+    public ListResult getTeacherByCollegeHead(int pageNum, int pageSize, String headId){
+        CollegeHead collegeHead = collegeHeadMapper.selectByPrimaryKey(headId);
+        PageHelper.startPage(pageNum, pageSize);
+        Example example = new Example(Teacher.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("college", collegeHead.getCollege());
+        List<Teacher> teachers = teacherMapper.selectByExample(example);
+        int count = teacherMapper.selectCountByExample(example);
+        PageInfo<Teacher> info = new PageInfo<>(teachers);
+        ListResult teacherResult = new ListResult(info.getList(),count);
+        return teacherResult;
+    }
 
     public Integer addTeacher(Teacher t) {
         t.setTeacherId(IDgenerator.generatorTeaId());

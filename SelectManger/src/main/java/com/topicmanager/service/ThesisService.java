@@ -4,14 +4,11 @@ package com.topicmanager.service;
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.topicmanager.mapper.ApplyThesisMapper;
-import com.topicmanager.mapper.OrderInfoMapper;
-import com.topicmanager.mapper.TeacherMapper;
-import com.topicmanager.mapper.ThesisMapper;
-import com.topicmanager.pojo.Applythesis;
-import com.topicmanager.pojo.Orderinfo;
-import com.topicmanager.pojo.Teacher;
-import com.topicmanager.pojo.Thesis;
+import com.topicmanager.enums.ApplyThesisStatusEnum;
+import com.topicmanager.enums.ThesisStatusEnum;
+import com.topicmanager.mapper.*;
+import com.topicmanager.pojo.*;
+import com.topicmanager.result.ListResult;
 import com.topicmanager.result.ThesisResult;
 import com.topicmanager.utils.IDgenerator;
 import com.topicmanager.utils.ThesisStatus;
@@ -47,6 +44,10 @@ public class ThesisService {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private CollegeHeadMapper collegeHeadMapper;
+
+
     //教师姓名获取教师课题
     public List<Thesis> getThesisByTeacherName(String teacherName){
         Example example = new Example(Thesis.class);
@@ -60,7 +61,16 @@ public class ThesisService {
 //        System.out.println(thesises);
         return thesises;
     }
+    //教师姓名获取教师课题
+    public List<Thesis> getThesisByCollegeHead(String headId){
+        CollegeHead collegeHead = collegeHeadMapper.selectByPrimaryKey(headId);
+        Example example = new Example(Thesis.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("thesisCollege", collegeHead.getCollege());
+        List<Thesis> thesises = thesisMapper.selectByExample(example);
 
+        return thesises;
+    }
     //通过id删除课题
     public Integer deleteById(String thesisId, String thesisName){
         Orderinfo orderinfo = new Orderinfo();
@@ -145,8 +155,25 @@ public class ThesisService {
             return 0;   //选题失败
         }
     }
-
-
+    public ListResult getApplyThesisByCollegeHead(int pageNum, int pageSize, String headId){
+        CollegeHead collegeHead = collegeHeadMapper.selectByPrimaryKey(headId);
+        PageHelper.startPage(pageNum, pageSize);
+        Example example = new Example(Applythesis.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("thesisCollege", collegeHead.getCollege());
+        criteria.andNotEqualTo("thesisStatus", ApplyThesisStatusEnum.FINISH.getStatus());
+        List<Applythesis> applythesis = applyThesisMapper.selectByExample(example);
+        int count = applyThesisMapper.selectCountByExample(example);
+        PageInfo<Applythesis> info = new PageInfo<>(applythesis);
+        ListResult studentResult = new ListResult(info.getList(),count);
+        return studentResult;
+    }
+    public void changeApplyThesisStatus(String applyThesisId,Integer status){
+        Applythesis applythesis = new Applythesis();
+        applythesis.setThesisStatus(status);
+        applythesis.setThesisId(applyThesisId);
+        applyThesisMapper.updateByPrimaryKeySelective(applythesis);
+    }
 
     public Thesis thesisVo_thesis(ThesisVo thesisVo){
         Thesis thesis = new Thesis();
@@ -158,6 +185,7 @@ public class ThesisService {
         thesis.setThesisFrom(thesisVo.getThesisFrom());
         thesis.setTeacher(thesisVo.getTeacher());
         thesis.setModel(thesisVo.getModel());
+        thesis.setClassroom(thesisVo.getClassroom());
         Date date = new Date();
         thesis.setThesisDate(date);
         thesis.setThesisDoc(thesisVo.getFilePath());
@@ -176,7 +204,7 @@ public class ThesisService {
         applythesis.setThesisCollege(thesisVo.getThesisCollege());
         applythesis.setThesisDoc(thesisVo.getFilePath());
         applythesis.setThesisFrom(thesisVo.getThesisFrom());
-        applythesis.setThesisStatus(ThesisStatus.PENDING);      //待审核状态
+        applythesis.setThesisStatus(ThesisStatusEnum.PENDING.getStatus());      //待审核状态
         applythesis.setThesisType(thesisVo.getThesisType());
         applythesis.setThesisDesc(thesisVo.getThesisDesc());
         Date date = new Date();
