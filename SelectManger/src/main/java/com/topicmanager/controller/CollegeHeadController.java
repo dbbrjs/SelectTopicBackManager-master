@@ -48,7 +48,7 @@ public class CollegeHeadController {
         return  Result.success(thesislist);
     }
     //获取学院学生
-    @GetMapping("/getStudent")
+    @GetMapping("/getstudent")
     @ResponseBody
     public Result<ListResult> getstudentByHeadId(@Param("pageNum")int pageNum,
                                                   @Param("pageSize") int pageSize, @Param("headId") String headId){
@@ -56,7 +56,7 @@ public class CollegeHeadController {
         return  Result.success(result);
     }
     //获取学院管理员名下课题
-    @GetMapping("/getTeacher")
+    @GetMapping("/getteacher")
     @ResponseBody
     public Result<ListResult> getThesisByByHeadId(@Param("pageNum")int pageNum,
                                                   @Param("pageSize") int pageSize,@Param("headId") String headId){
@@ -64,7 +64,7 @@ public class CollegeHeadController {
         return  Result.success(result);
     }
 
-    @GetMapping("/pendingThesis")
+    @GetMapping("/pendingthesis")
     public Result<ListResult> getPendgingThesisByByHeadId(@Param("pageNum")int pageNum,
                                                   @Param("pageSize") int pageSize,@Param("headId") String headId){
         ListResult result = thesisService.getApplyThesisByCollegeHead(pageNum,pageSize,headId);
@@ -79,11 +79,6 @@ public class CollegeHeadController {
     @PostMapping("/refuse")
     public Result<Void> refuse(@Param("thesisId")String thesisId){
         thesisService.changeApplyThesisStatus(thesisId, ApplyThesisStatusEnum.HEAD_REFUSE.getStatus());
-        return Result.success(null);
-    }
-    @PostMapping("/editInfo")
-    public Result<Void> editInfo(@RequestBody CollegeHead collegeHead){
-        collegeHeadService.updateInfo(collegeHead);
         return Result.success(null);
     }
 }
