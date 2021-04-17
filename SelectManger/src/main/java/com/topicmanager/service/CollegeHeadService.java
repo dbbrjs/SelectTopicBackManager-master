@@ -20,4 +20,7 @@ public class CollegeHeadService {
     public void updateInfo(CollegeHead collegeHead){
         collegeHeadMapper.updateByPrimaryKeySelective(collegeHead);
     }
+    public CollegeHead getInfo(String headId){
+        return collegeHeadMapper.selectByPrimaryKey(headId);
+    }
 }

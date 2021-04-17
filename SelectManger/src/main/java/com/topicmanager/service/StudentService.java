@@ -54,12 +54,15 @@ public class StudentService {
         return studentMapper.updateByPrimaryKey(s);
     }
 
-    public ListResult getStudentByCollegeHead(int pageNum,int pageSize,String headId){
+    public ListResult getStudentByCollegeHead(int pageNum,int pageSize,String headId,String stName){
         CollegeHead collegeHead = collegeHeadMapper.selectByPrimaryKey(headId);
         PageHelper.startPage(pageNum, pageSize);
         Example example = new Example(Student.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("college", collegeHead.getCollege());
+        if (stName!=null){
+            criteria.andLike("studentName", "%"+stName+"%");
+        }
         List<Student> students = studentMapper.selectByExample(example);
         int count = studentMapper.selectCountByExample(example);
         PageInfo<Student> info = new PageInfo<>(students);

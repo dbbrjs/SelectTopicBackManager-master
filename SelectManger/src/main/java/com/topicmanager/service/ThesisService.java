@@ -61,15 +61,30 @@ public class ThesisService {
 //        System.out.println(thesises);
         return thesises;
     }
-    //教师姓名获取教师课题
-    public List<Thesis> getThesisByCollegeHead(String headId){
+    //获取课题
+    public ListResult getThesisByCollegeHead(int pageNum, int pageSize, String headId,String topic,
+                                               String  stName,String teName){
         CollegeHead collegeHead = collegeHeadMapper.selectByPrimaryKey(headId);
+        PageHelper.startPage(pageNum, pageSize);
         Example example = new Example(Thesis.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("thesisCollege", collegeHead.getCollege());
+        if (topic!=null){
+            criteria.andLike("thesisName","%"+topic+"%");
+        }
+        if (stName!=null){
+            criteria.andLike("student","%"+stName+"%");
+        }
+        if (teName!=null){
+            criteria.andLike("teacher","%"+teName+"%");
+        }
         List<Thesis> thesises = thesisMapper.selectByExample(example);
+        int count = thesisMapper.selectCountByExample(example);
+        PageInfo<Thesis> info = new PageInfo<>(thesises);
+        System.out.println(info.getList());
+        ListResult studentResult = new ListResult(info.getList(),count);
 
-        return thesises;
+        return studentResult;
     }
     //通过id删除课题
     public Integer deleteById(String thesisId, String thesisName){
@@ -155,13 +170,23 @@ public class ThesisService {
             return 0;   //选题失败
         }
     }
-    public ListResult getApplyThesisByCollegeHead(int pageNum, int pageSize, String headId){
+    public ListResult getApplyThesisByCollegeHead(int pageNum, int pageSize, String headId,String topic,
+                                                  String  stName,String teName){
         CollegeHead collegeHead = collegeHeadMapper.selectByPrimaryKey(headId);
         PageHelper.startPage(pageNum, pageSize);
         Example example = new Example(Applythesis.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("thesisCollege", collegeHead.getCollege());
         criteria.andNotEqualTo("thesisStatus", ApplyThesisStatusEnum.FINISH.getStatus());
+        if (topic!=null){
+            criteria.andLike("thesisName","%"+topic+"%");
+        }
+        if (stName!=null){
+            criteria.andLike("studentName","%"+stName+"%");
+        }
+        if (teName!=null){
+            criteria.andLike("teacher","%"+teName+"%");
+        }
         List<Applythesis> applythesis = applyThesisMapper.selectByExample(example);
         int count = applyThesisMapper.selectCountByExample(example);
         PageInfo<Applythesis> info = new PageInfo<>(applythesis);

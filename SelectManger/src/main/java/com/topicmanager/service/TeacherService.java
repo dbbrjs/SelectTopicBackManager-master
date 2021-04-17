@@ -55,12 +55,15 @@ public class TeacherService {
         return  teacherMapper.selectOne(teacher);
     }
 
-    public ListResult getTeacherByCollegeHead(int pageNum, int pageSize, String headId){
+    public ListResult getTeacherByCollegeHead(int pageNum, int pageSize, String headId,String teName){
         CollegeHead collegeHead = collegeHeadMapper.selectByPrimaryKey(headId);
         PageHelper.startPage(pageNum, pageSize);
         Example example = new Example(Teacher.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("college", collegeHead.getCollege());
+        if (teName!=null){
+            criteria.andLike("teacherName", "%"+teName+"%");
+        }
         List<Teacher> teachers = teacherMapper.selectByExample(example);
         int count = teacherMapper.selectCountByExample(example);
         PageInfo<Teacher> info = new PageInfo<>(teachers);

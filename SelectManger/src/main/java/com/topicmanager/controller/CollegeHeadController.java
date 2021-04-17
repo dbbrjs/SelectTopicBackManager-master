@@ -6,6 +6,7 @@ import com.topicmanager.pojo.Thesis;
 import com.topicmanager.result.CodeMsg;
 import com.topicmanager.result.ListResult;
 import com.topicmanager.result.Result;
+import com.topicmanager.result.ThesisResult;
 import com.topicmanager.service.CollegeHeadService;
 import com.topicmanager.service.StudentService;
 import com.topicmanager.service.TeacherService;
@@ -43,31 +44,36 @@ public class CollegeHeadController {
     //获取学院管理员名下课题
     @GetMapping("/headthesis")
     @ResponseBody
-    public Result<List<Thesis>> getThesisByHeadName(@Param("headId") String headId){
-        List<Thesis> thesislist = thesisService.getThesisByCollegeHead(headId);
-        return  Result.success(thesislist);
+    public Result<ListResult> getThesisByHeadName(@Param("pageNum")int pageNum,
+                                                    @Param("pageSize") int pageSize,@Param("headId") String headId,String topic,
+                                                    String  stName,String teName){
+        ListResult thesisByCollegeHead = thesisService.getThesisByCollegeHead(pageNum, pageSize, headId, topic,
+                stName, teName);
+        return  Result.success(thesisByCollegeHead);
     }
     //获取学院学生
     @GetMapping("/getStudent")
     @ResponseBody
     public Result<ListResult> getstudentByHeadId(@Param("pageNum")int pageNum,
-                                                  @Param("pageSize") int pageSize, @Param("headId") String headId){
-        ListResult result = studentService.getStudentByCollegeHead(pageNum,pageSize,headId);
+                                                  @Param("pageSize") int pageSize, @Param("headId") String headId,String stName){
+        ListResult result = studentService.getStudentByCollegeHead(pageNum,pageSize,headId,stName);
         return  Result.success(result);
     }
     //获取学院管理员名下课题
     @GetMapping("/getTeacher")
     @ResponseBody
     public Result<ListResult> getThesisByByHeadId(@Param("pageNum")int pageNum,
-                                                  @Param("pageSize") int pageSize,@Param("headId") String headId){
-        ListResult result = teacherService.getTeacherByCollegeHead(pageNum,pageSize,headId);
+                                                  @Param("pageSize") int pageSize,@Param("headId") String headId,String teName){
+        ListResult result = teacherService.getTeacherByCollegeHead(pageNum,pageSize,headId,teName);
         return  Result.success(result);
     }
 
     @GetMapping("/pendingThesis")
     public Result<ListResult> getPendgingThesisByByHeadId(@Param("pageNum")int pageNum,
-                                                  @Param("pageSize") int pageSize,@Param("headId") String headId){
-        ListResult result = thesisService.getApplyThesisByCollegeHead(pageNum,pageSize,headId);
+                                                  @Param("pageSize") int pageSize,@Param("headId") String headId,String topic,
+                                                          String  stName,String teName){
+        ListResult result = thesisService.getApplyThesisByCollegeHead(pageNum,pageSize,headId,topic,
+                stName,teName);
         return  Result.success(result);
     }
     @PostMapping("/confirm")
@@ -86,4 +92,10 @@ public class CollegeHeadController {
         collegeHeadService.updateInfo(collegeHead);
         return Result.success(null);
     }
+
+    @GetMapping("/getInfo")
+    public Result<CollegeHead> getInfo(String headId){
+        return Result.success( collegeHeadService.getInfo(headId));
+    }
+
 }
