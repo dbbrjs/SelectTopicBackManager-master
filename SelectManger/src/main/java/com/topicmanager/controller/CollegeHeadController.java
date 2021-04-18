@@ -92,7 +92,7 @@ public class CollegeHeadController {
     @PostMapping("/editInfo")
     public Result<Void> editInfo(@Param("head") String head){
         CollegeHead t = JSON.parseObject(head, CollegeHead.class);
-        if (t.getHeadId().equals("")){
+        if (t.getHeadId()==null||t.getHeadId().equals("")){
             Integer res = collegeHeadService.insert(t);
             if (res != 1)  return Result.error(CodeMsg.FAILED);
         }else{
