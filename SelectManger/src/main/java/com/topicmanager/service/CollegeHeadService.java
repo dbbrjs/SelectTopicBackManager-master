@@ -24,8 +24,9 @@ public class CollegeHeadService {
     public CollegeHead getInfo(String headId){
         return collegeHeadMapper.selectByPrimaryKey(headId);
     }
+
     public Integer insert(CollegeHead collegeHead){
-        collegeHead.setCollegeId(IDgenerator.generatorHeadId());
+        collegeHead.setHeadId(IDgenerator.generatorHeadId());
         return collegeHeadMapper.insert(collegeHead);
     }
 
