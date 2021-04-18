@@ -96,7 +96,7 @@ public class ManagerController {
     }
 
     //删除教导主任
-    @PostMapping("/delteacher")
+    @PostMapping("/delhead")
     @ResponseBody
     public Result<CodeMsg> delHeader(@Param("head") String head){
         CollegeHead t = JSON.parseObject(head, CollegeHead.class);
