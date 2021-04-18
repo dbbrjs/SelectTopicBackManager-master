@@ -1,12 +1,14 @@
 package com.topicmanager.pojo;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Data
 @Table(name = "student")
+@NoArgsConstructor
 public class Student {
 
     @Id
@@ -20,5 +22,6 @@ public class Student {
     private String classNumber;   //班级
     private String phone;
     private String email;
+    private Integer status;
 
 }

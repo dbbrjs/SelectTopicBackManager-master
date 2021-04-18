@@ -2,6 +2,7 @@ package com.topicmanager.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.topicmanager.pojo.CollegeHead;
 import com.topicmanager.pojo.Manager;
 import com.topicmanager.pojo.Student;
 import com.topicmanager.pojo.Teacher;
@@ -75,6 +76,15 @@ public class ManagerController {
         return Result.success(result);
     }
 
+    //获取所有教导主任信息
+    @GetMapping("/allheaders")
+    @ResponseBody
+    public Result<ListResult> getAllHeaders(@Param("pageNum")int pageNum,
+                                             @Param("pageSize") int pageSize){
+        ListResult result = managerService.getAllHeaders(pageNum, pageSize);
+        return Result.success(result);
+    }
+
     //删除教师
     @PostMapping("/delteacher")
     @ResponseBody
@@ -85,7 +95,15 @@ public class ManagerController {
         return Result.success(CodeMsg.SUCCESS);
     }
 
-
+    //删除教导主任
+    @PostMapping("/delteacher")
+    @ResponseBody
+    public Result<CodeMsg> delHeader(@Param("head") String head){
+        CollegeHead t = JSON.parseObject(head, CollegeHead.class);
+        Integer res = managerService.delHead(t);
+        if (res != 1)  return Result.error(CodeMsg.FAILED);
+        return Result.success(CodeMsg.SUCCESS);
+    }
     //删除学生
     @PostMapping("/delstudent")
     @ResponseBody
