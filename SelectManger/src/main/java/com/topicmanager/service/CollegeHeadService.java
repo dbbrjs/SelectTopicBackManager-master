@@ -2,6 +2,7 @@ package com.topicmanager.service;
 
 import com.topicmanager.mapper.CollegeHeadMapper;
 import com.topicmanager.pojo.CollegeHead;
+import com.topicmanager.utils.IDgenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ public class CollegeHeadService {
         return collegeHeadMapper.selectByPrimaryKey(headId);
     }
     public Integer insert(CollegeHead collegeHead){
+        collegeHead.setCollegeId(IDgenerator.generatorHeadId());
         return collegeHeadMapper.insert(collegeHead);
     }
 

@@ -30,8 +30,9 @@ public class IDgenerator {
     public static String generatorTeaId(){
         return "tea-" + getUUID();
     }
-
-
+    public static String generatorHeadId(){
+        return "head-" + getUUID();
+    }
     //    随机生成学生申请课题id   ---  applythesis
     public static String generatorStuSisId(){
         return "asi-" + getUUID();
