@@ -1,7 +1,9 @@
 package com.topicmanager.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.topicmanager.enums.ApplyThesisStatusEnum;
 import com.topicmanager.pojo.CollegeHead;
+import com.topicmanager.pojo.Teacher;
 import com.topicmanager.pojo.Thesis;
 import com.topicmanager.result.CodeMsg;
 import com.topicmanager.result.ListResult;
@@ -88,8 +90,16 @@ public class CollegeHeadController {
         return Result.success(null);
     }
     @PostMapping("/editInfo")
-    public Result<Void> editInfo(@RequestBody CollegeHead collegeHead){
-        collegeHeadService.updateInfo(collegeHead);
+    public Result<Void> editInfo(@Param("head") String collegeHead){
+
+        CollegeHead t = JSON.parseObject(collegeHead, CollegeHead.class);
+        if (t.getHeadId().equals("")){
+            Integer res = collegeHeadService.insert(t);
+            if (res != 1)  return Result.error(CodeMsg.FAILED);
+        }else{
+            Integer res = collegeHeadService.updateInfo(t);
+            if (res != 1)  return Result.error(CodeMsg.FAILED);
+        }
         return Result.success(null);
     }
 

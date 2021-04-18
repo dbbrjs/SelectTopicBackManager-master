@@ -17,10 +17,14 @@ public class CollegeHeadService {
     }
 
 
-    public void updateInfo(CollegeHead collegeHead){
-        collegeHeadMapper.updateByPrimaryKeySelective(collegeHead);
+    public Integer updateInfo(CollegeHead collegeHead){
+        return collegeHeadMapper.updateByPrimaryKeySelective(collegeHead);
     }
     public CollegeHead getInfo(String headId){
         return collegeHeadMapper.selectByPrimaryKey(headId);
     }
+    public Integer insert(CollegeHead collegeHead){
+        return collegeHeadMapper.insert(collegeHead);
+    }
+
 }
