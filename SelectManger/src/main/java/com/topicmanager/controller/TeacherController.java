@@ -9,10 +9,7 @@ import com.topicmanager.pojo.Teacher;
 import com.topicmanager.pojo.Thesis;
 import com.topicmanager.result.CodeMsg;
 import com.topicmanager.result.Result;
-import com.topicmanager.service.OrderInfoService;
-import com.topicmanager.service.StudentService;
-import com.topicmanager.service.TeacherService;
-import com.topicmanager.service.ThesisService;
+import com.topicmanager.service.*;
 import com.topicmanager.vo.ThesisVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +37,9 @@ public class TeacherController {
 
     @Autowired
     private StudentService studentService;
+
+    @Autowired
+    private MessageService messageService;
 
     @PostMapping("/login")
     @ResponseBody
@@ -172,5 +172,19 @@ public class TeacherController {
     public Result<List> getStudent(@Param("teacherName") String teacherName){
         List<StudentThesis> students = teacherService.getStudent(teacherName);
         return Result.success(students);
+    }
+
+
+    @PostMapping("/news")
+    @ResponseBody
+    public Result<CodeMsg> sendMessage(@Param("teId") String teId,@Param("stName") String stName,@Param("news") String news){
+        messageService.createMessage(teId,stName,news);
+        return Result.success(CodeMsg.SUCCESS);
+    }
+
+    @GetMapping("/news")
+    @ResponseBody
+    public Result<List> getMessage(@Param("teId") String teId,@Param("stName") String stName){
+        return Result.success( messageService.getByteId(teId,stName));
     }
 }

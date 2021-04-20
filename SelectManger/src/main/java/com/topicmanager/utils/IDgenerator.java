@@ -43,7 +43,10 @@ public class IDgenerator {
         return "ori-" + getUUID();
     }
 
-
+    //    随机生成message id   ---  orderinfo
+    public static String generatorMessageId(){
+        return "msg-" + getUUID();
+    }
 //    public static void main(String[] args) {
 //        Map map = new HashMap<>();
 //        for (int i = 0; i < 1000; i++) {

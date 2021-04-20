@@ -7,6 +7,7 @@ import com.topicmanager.pojo.Thesis;
 import com.topicmanager.result.CodeMsg;
 import com.topicmanager.result.Result;
 import com.topicmanager.result.ThesisResult;
+import com.topicmanager.service.MessageService;
 import com.topicmanager.service.OrderInfoService;
 import com.topicmanager.service.StudentService;
 import com.topicmanager.service.ThesisService;
@@ -34,6 +35,9 @@ public class StudentController {
 
     @Autowired
     private OrderInfoService orderInfoService;
+
+    @Autowired
+    private MessageService messageService;
 
     @PostMapping("/login")
     @ResponseBody
@@ -130,5 +134,18 @@ public class StudentController {
         Integer res = studentService.chooseThesis(t, studentId, studentName);
         if(res!=1) return Result.error(CodeMsg.CHOOSE_WRONG);
         return Result.success(CodeMsg.SUCCESS);
+    }
+
+    @PostMapping("/news")
+    @ResponseBody
+    public Result<CodeMsg> sendMessage(@Param("stId") String stId,@Param("news") String news){
+        messageService.createMessage(stId,news);
+        return Result.success(CodeMsg.SUCCESS);
+    }
+
+    @GetMapping("/news")
+    @ResponseBody
+    public Result<List> getMessage(@Param("stId") String stId){
+        return Result.success( messageService.getBystId(stId));
     }
 }
