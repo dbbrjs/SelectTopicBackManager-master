@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Service
@@ -44,6 +45,7 @@ public class MessageService {
         message.setStudentId(stId);
         message.setTeacherId(teacher1.getTeacherId());
         message.setNews(news);
+        message.setCreateTime(new Timestamp(System.currentTimeMillis()));
         message.setDirect(MessageTypeEnum.TOTEACHER.getDirect());
         messageMapper.insert(message);
     }
@@ -57,6 +59,7 @@ public class MessageService {
         message.setStudentId(student1.getStudentId());
         message.setTeacherId(teId);
         message.setNews(news);
+        message.setCreateTime(new Timestamp(System.currentTimeMillis()));
         message.setDirect(MessageTypeEnum.TOSTUDENT.getDirect());
         messageMapper.insert(message);
     }
