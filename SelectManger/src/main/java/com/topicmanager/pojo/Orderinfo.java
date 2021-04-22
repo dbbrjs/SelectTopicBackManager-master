@@ -3,6 +3,7 @@ package com.topicmanager.pojo;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.context.annotation.Bean;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -37,4 +38,10 @@ public class Orderinfo {
     private String thesisDoc;         //附件
     private String student;           //所属学生
     private String thesisDesc;        //简述
+
+    private String reportDoc;
+    private Boolean reportStatus;
+    private String paperDoc;
+    private Boolean paperStatus;
+    private Integer grades;
 }

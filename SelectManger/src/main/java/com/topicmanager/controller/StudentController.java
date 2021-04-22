@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.annotation.Order;
 
 import java.util.List;
@@ -147,5 +148,18 @@ public class StudentController {
     @ResponseBody
     public Result<List> getMessage(@Param("stId") String stId){
         return Result.success( messageService.getBystId(stId));
+    }
+
+    @PostMapping("/report")
+    @ResponseBody
+    public Result<CodeMsg> uploadReport(String stId, MultipartFile file){
+        thesisService.uploadReport(stId,file);
+        return Result.success(CodeMsg.SUCCESS);
+    }
+    @PostMapping("/paper")
+    @ResponseBody
+    public Result<CodeMsg> uploadPaper(String stId, MultipartFile file){
+        thesisService.uploadPaper(stId,file);
+        return Result.success(CodeMsg.SUCCESS);
     }
 }

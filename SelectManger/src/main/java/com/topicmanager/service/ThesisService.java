@@ -6,9 +6,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.topicmanager.enums.ApplyThesisStatusEnum;
 import com.topicmanager.enums.ThesisStatusEnum;
+import com.topicmanager.fastdfs.FastDFSClientWrapper;
 import com.topicmanager.mapper.*;
 import com.topicmanager.pojo.*;
 import com.topicmanager.result.ListResult;
+import com.topicmanager.result.Result;
 import com.topicmanager.result.ThesisResult;
 import com.topicmanager.utils.IDgenerator;
 import com.topicmanager.utils.ThesisStatus;
@@ -18,6 +20,7 @@ import org.mockito.cglib.core.ClassGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.annotation.Order;
 import tk.mybatis.mapper.entity.Example;
 
@@ -46,6 +49,9 @@ public class ThesisService {
 
     @Autowired
     private CollegeHeadMapper collegeHeadMapper;
+
+    @Autowired
+    private FastDFSClientWrapper fastDFSClient;
 
 
     //教师姓名获取教师课题
@@ -257,5 +263,35 @@ public class ThesisService {
         o.setStatus(ThesisStatus.PENDING);
         return o;
     }
+
+    public void uploadReport(String stId, MultipartFile file){
+        try {
+            String path = fastDFSClient.uploadFile(file);
+            path = "http://112.124.14.194/" + path;
+            Orderinfo orderinfo = new Orderinfo();
+            orderinfo.setStuNum(stId);
+            Orderinfo orderinfo1 = orderInfoMapper.selectOne(orderinfo);
+            orderinfo1.setReportDoc(path);
+            orderInfoMapper.updateByPrimaryKey(orderinfo1);
+        }
+        catch (Exception e){
+
+        }
+    }
+    public void uploadPaper(String stId, MultipartFile file){
+        try {
+            String path = fastDFSClient.uploadFile(file);
+            path = "http://112.124.14.194/" + path;
+            Orderinfo orderinfo = new Orderinfo();
+            orderinfo.setStuNum(stId);
+            Orderinfo orderinfo1 = orderInfoMapper.selectOne(orderinfo);
+            orderinfo1.setPaperDoc(path);
+            orderInfoMapper.updateByPrimaryKey(orderinfo1);
+        }
+        catch (Exception e){
+
+        }
+    }
+
 
 }
