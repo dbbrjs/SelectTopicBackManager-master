@@ -3,10 +3,8 @@ package com.topicmanager.controller;
 
 import com.alibaba.fastjson.JSON;
 //import com.sun.org.apache.regexp.internal.RE;
-import com.topicmanager.pojo.Orderinfo;
-import com.topicmanager.pojo.StudentThesis;
-import com.topicmanager.pojo.Teacher;
-import com.topicmanager.pojo.Thesis;
+import com.topicmanager.enums.ApplyThesisStatusEnum;
+import com.topicmanager.pojo.*;
 import com.topicmanager.result.CodeMsg;
 import com.topicmanager.result.Result;
 import com.topicmanager.service.*;
@@ -95,6 +93,7 @@ public class TeacherController {
     @ResponseBody
     public Result<CodeMsg> addThesis(@Param("thesisVo") String thesisVo){
         ThesisVo thesisVo1 = JSON.parseObject(thesisVo, ThesisVo.class);
+        thesisService.applyThesis(thesisVo1, null);
         Integer res = thesisService.addThesis(thesisVo1);
         if (res != 1)  return Result.error(CodeMsg.FAILED);
         return Result.success(CodeMsg.SUCCESS);
@@ -187,4 +186,29 @@ public class TeacherController {
     public Result<List> getMessage(@Param("teId") String teId,@Param("stName") String stName){
         return Result.success( messageService.getByteId(teId,stName));
     }
+
+    @GetMapping("/getapply")
+    @ResponseBody
+    public Result<List> getApply(@Param("teacherName") String teacherName) {
+        List<Applythesis> applytheses = thesisService.teacherGetApplyThesis(teacherName);
+        return Result.success(applytheses);
+    }
+        //通过选题
+    @PostMapping("/applyconfirm")
+    @ResponseBody
+    public Result<CodeMsg> applyconfirm(@Param("thesisId") String thesisId){
+        thesisService.changeApplyThesisStatus(thesisId, ApplyThesisStatusEnum.WAIT_HEAD_CHECK.getStatus());
+        return Result.success(CodeMsg.SUCCESS);
+    }
+
+
+    //拒绝选题
+    @PostMapping("/applyrefuse")
+    @ResponseBody
+    public Result<CodeMsg> applyrefuse(@Param("thesisId") String thesisId){
+        thesisService.changeApplyThesisStatus(thesisId, ApplyThesisStatusEnum.TEACHER_REFUSE.getStatus());
+        return Result.success(CodeMsg.SUCCESS);
+    }
+
+
 }

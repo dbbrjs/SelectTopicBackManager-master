@@ -48,6 +48,9 @@ public class ThesisService {
     private StudentService studentService;
 
     @Autowired
+    private StudentMapper studentMapper;
+
+    @Autowired
     private CollegeHeadMapper collegeHeadMapper;
 
     @Autowired
@@ -108,8 +111,8 @@ public class ThesisService {
     //教师添加课题
     @Transactional
     public Integer addThesis(ThesisVo thesisVo){
-        Thesis thesis = thesisVo_thesis(thesisVo);
-        return thesisMapper.insert(thesis);
+        Applythesis applythesis = thesisVo_applyThesis(thesisVo);
+        return applyThesisMapper.insert(applythesis);
     }
 
     //select thesis by id
@@ -160,6 +163,13 @@ public class ThesisService {
         return result;
     }
 
+
+    public List<Applythesis> teacherGetApplyThesis(String teacherName){
+        Applythesis applythesis = new Applythesis();
+        applythesis.setTeacher(teacherName);
+        applythesis.setThesisStatus(ApplyThesisStatusEnum.WAIT_TEACHER_CHECK.getStatus());
+        return applyThesisMapper.select(applythesis);
+    }
     //学生申报课题
     @Transactional
     public Integer applyThesis(ThesisVo thesisVo, String studentId) {
@@ -170,8 +180,9 @@ public class ThesisService {
             Orderinfo orderinfo = thesisVo_Orderinfo(thesisVo, studentId);
             orderinfo.setSisNum(thesis.getThesisId());
             thesisMapper.insert(thesis);
-            applyThesisMapper.insert(applythesis);
-            return orderInfoMapper.insert(orderinfo);
+            applythesis.setThesisStatus(ApplyThesisStatusEnum.WAIT_TEACHER_CHECK.getStatus());
+            return  applyThesisMapper.insert(applythesis);
+
         }else{
             return 0;   //选题失败
         }
@@ -204,6 +215,23 @@ public class ThesisService {
         applythesis.setThesisStatus(status);
         applythesis.setThesisId(applyThesisId);
         applyThesisMapper.updateByPrimaryKeySelective(applythesis);
+
+        if (status.equals(ApplyThesisStatusEnum.FINISH.getStatus())){
+            Applythesis applythesis1 = applyThesisMapper.selectByPrimaryKey(applythesis);
+            if (applythesis1.getStudentName()!=null){
+                Orderinfo orderinfo = applythesisesis_orderinfo(applythesis1);
+                Student student = new Student();
+                student.setStudentName(applythesis1.getStudentName());
+                Student student1 = studentMapper.selectOne(student);
+                orderinfo.setStuNum(student1.getStudentId());
+                orderinfo.setStatus("待审核");
+                orderinfo.setModel("学生自建课题");
+                orderInfoMapper.insert(new Orderinfo());
+            }else {
+                Thesis thesis = applythesis_thesis(applythesis1);
+                thesisMapper.insert(thesis);
+            }
+        }
     }
 
     public Thesis thesisVo_thesis(ThesisVo thesisVo){
@@ -225,7 +253,33 @@ public class ThesisService {
         thesis.setIschoose(null);
         return thesis;
     }
+    public Thesis applythesis_thesis(Applythesis applythesis){
+        Thesis thesis = new Thesis();
+        thesis.setThesisId(IDgenerator.generatorThesisId());
+        thesis.setThesisName(applythesis.getThesisName());
+        thesis.setThesisCollege(applythesis.getThesisCollege());
+        thesis.setThesisType(applythesis.getThesisType());
+        thesis.setThesisFrom(applythesis.getThesisFrom());
+        thesis.setTeacher(applythesis.getTeacher());
+        Date date = new Date();
+        thesis.setThesisDate(date);
+        thesis.setThesisDesc(applythesis.getThesisDesc());
+        thesis.setIschoose(null);
+        return thesis;
+    }
 
+    public Orderinfo applythesisesis_orderinfo(Applythesis applythesis){
+        Orderinfo orderinfo = new Orderinfo();
+        orderinfo.setId(IDgenerator.generatorOrderId());
+        orderinfo.setThesisName(applythesis.getThesisName());
+        orderinfo.setTeacher(applythesis.getTeacher());
+        orderinfo.setStudent(applythesis.getStudentName());
+        orderinfo.setThesisCollege(applythesis.getThesisCollege());
+        orderinfo.setThesisFrom(applythesis.getThesisFrom());
+        orderinfo.setThesisType(applythesis.getThesisType());
+        orderinfo.setThesisDesc(applythesis.getThesisDesc());
+        return orderinfo;
+    }
     public Applythesis thesisVo_applyThesis(ThesisVo thesisVo) {
         Applythesis applythesis = new Applythesis();
         applythesis.setThesisId(IDgenerator.generatorStuSisId());

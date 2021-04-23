@@ -30,7 +30,7 @@ public class FdfsController {
     @ResponseBody
     public Result<String> uploadFile(@RequestParam("file")MultipartFile multipartFile) throws IOException {
         String path = fastDFSClient.uploadFile(multipartFile);
-//        System.out.println(path);
+////        System.out.println(path);
         path = "http://112.124.14.194/" + path;
         return Result.success(path);
     }
