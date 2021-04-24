@@ -75,6 +75,13 @@ public class StudentService {
         if(isOk == 1){
             Orderinfo orderinfo = setOrderInfo(thesis, studentId, studentName);
 //            System.out.println(orderinfo);
+            if (thesis.getModel().equals("师生互选课题")){
+                orderinfo.setStatus("待审核");
+            }
+            else
+            {
+                orderinfo.setStatus("审核通过");
+            }
             thesisMapper.changeChooseToYES(thesis.getThesisId());
             return orderInfoMapper.insert(orderinfo);
         }else{
