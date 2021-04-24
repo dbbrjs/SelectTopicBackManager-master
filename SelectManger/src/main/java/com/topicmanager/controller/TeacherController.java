@@ -218,7 +218,7 @@ public class TeacherController {
         List<OrderinfoSimpleReport> collect = orderInfos.stream().map(orderinfo -> {
             OrderinfoSimpleReport orderinfoSimpleReport = new OrderinfoSimpleReport();
             orderinfoSimpleReport.setId(orderinfo.getId());
-            orderinfoSimpleReport.setSisNum(orderinfo.getSisNum());
+            orderinfoSimpleReport.setThesisName(orderinfo.getThesisName());
             orderinfoSimpleReport.setStudent(orderinfo.getStudent());
             orderinfoSimpleReport.setThesisCollege(orderinfo.getThesisCollege());
             orderinfoSimpleReport.setReportDoc(orderinfo.getReportDoc());
@@ -245,7 +245,7 @@ public class TeacherController {
         List<OrderinfoSimplePaper> collect = orderInfos.stream().map(orderinfo -> {
             OrderinfoSimplePaper orderinfoSimplePaper = new OrderinfoSimplePaper();
             orderinfoSimplePaper.setId(orderinfo.getId());
-            orderinfoSimplePaper.setSisNum(orderinfo.getSisNum());
+            orderinfoSimplePaper.setThesisName(orderinfo.getThesisName());
             orderinfoSimplePaper.setStudent(orderinfo.getStudent());
             orderinfoSimplePaper.setThesisCollege(orderinfo.getThesisCollege());
             orderinfoSimplePaper.setPaperDoc(orderinfo.getPaperDoc());

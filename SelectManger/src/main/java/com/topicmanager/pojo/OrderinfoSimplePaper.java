@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OrderinfoSimplePaper {
     private String id;
-    private String sisNum;
+    private String thesisName;
     private String thesisCollege;    //所属学院
     private String student;           //所属学生
     private String paperDoc;
