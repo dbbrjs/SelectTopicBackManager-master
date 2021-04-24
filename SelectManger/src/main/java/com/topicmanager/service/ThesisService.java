@@ -261,6 +261,7 @@ public class ThesisService {
         thesis.setThesisType(applythesis.getThesisType());
         thesis.setThesisFrom(applythesis.getThesisFrom());
         thesis.setTeacher(applythesis.getTeacher());
+        thesis.setModel("师生互选课题");
         Date date = new Date();
         thesis.setThesisDate(date);
         thesis.setThesisDesc(applythesis.getThesisDesc());
