@@ -212,8 +212,8 @@ public class TeacherController {
 
     @GetMapping("/report")
     @ResponseBody
-    public Result<List<OrderinfoSimpleReport>>getReport(@Param("thesisId") String thesisId){
-        Teacher teacherById = teacherService.getTeacherById(thesisId);
+    public Result<List<OrderinfoSimpleReport>>getReport(@Param("teId") String teId){
+        Teacher teacherById = teacherService.getTeacherById(teId);
         List<Orderinfo> orderInfos = orderInfoService.getOrderByTeacherName(teacherById.getTeacherName());
         List<OrderinfoSimpleReport> collect = orderInfos.stream().map(orderinfo -> {
             OrderinfoSimpleReport orderinfoSimpleReport = new OrderinfoSimpleReport();
@@ -239,8 +239,8 @@ public class TeacherController {
     }
     @GetMapping("/paper")
     @ResponseBody
-    public Result<List<OrderinfoSimplePaper>>getPaper(@Param("thesisId") String thesisId){
-        Teacher teacherById = teacherService.getTeacherById(thesisId);
+    public Result<List<OrderinfoSimplePaper>>getPaper(@Param("teId") String teId){
+        Teacher teacherById = teacherService.getTeacherById(teId);
         List<Orderinfo> orderInfos = orderInfoService.getOrderByTeacherName(teacherById.getTeacherName());
         List<OrderinfoSimplePaper> collect = orderInfos.stream().map(orderinfo -> {
             OrderinfoSimplePaper orderinfoSimplePaper = new OrderinfoSimplePaper();
