@@ -226,7 +226,7 @@ public class ThesisService {
                 orderinfo.setStuNum(student1.getStudentId());
                 orderinfo.setStatus("审核通过");
                 orderinfo.setModel("学生自拟");
-                orderInfoMapper.insert(new Orderinfo());
+                orderInfoMapper.insert(orderinfo);
             }else {
                 Thesis thesis = applythesis_thesis(applythesis1);
                 thesisMapper.insert(thesis);
