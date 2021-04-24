@@ -167,7 +167,7 @@ public class ThesisService {
     public List<Applythesis> teacherGetApplyThesis(String teacherName){
         Applythesis applythesis = new Applythesis();
         applythesis.setTeacher(teacherName);
-        applythesis.setThesisStatus(ApplyThesisStatusEnum.WAIT_TEACHER_CHECK.getStatus());
+//        applythesis.setThesisStatus(ApplyThesisStatusEnum.WAIT_TEACHER_CHECK.getStatus());
         return applyThesisMapper.select(applythesis);
     }
     //学生申报课题
