@@ -194,7 +194,7 @@ public class ThesisService {
         Example example = new Example(Applythesis.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("thesisCollege", collegeHead.getCollege());
-        criteria.andNotEqualTo("thesisStatus", ApplyThesisStatusEnum.FINISH.getStatus());
+//        criteria.andNotEqualTo("thesisStatus", ApplyThesisStatusEnum.FINISH.getStatus());
         if (topic!=null){
             criteria.andLike("thesisName","%"+topic+"%");
         }

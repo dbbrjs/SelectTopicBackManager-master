@@ -193,7 +193,7 @@ public class TeacherController {
         List<Applythesis> applytheses = thesisService.teacherGetApplyThesis(teacherName);
         return Result.success(applytheses);
     }
-        //通过选题
+        //通过学生自建选题
     @PostMapping("/applyconfirm")
     @ResponseBody
     public Result<CodeMsg> applyconfirm(@Param("thesisId") String thesisId){
@@ -202,7 +202,7 @@ public class TeacherController {
     }
 
 
-    //拒绝选题
+    //拒绝学生自建选题
     @PostMapping("/applyrefuse")
     @ResponseBody
     public Result<CodeMsg> applyrefuse(@Param("thesisId") String thesisId){
