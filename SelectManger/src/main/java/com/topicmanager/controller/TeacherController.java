@@ -11,13 +11,11 @@ import com.topicmanager.service.*;
 import com.topicmanager.vo.ThesisVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.ClassGenerator;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/teacher")
@@ -155,6 +153,7 @@ public class TeacherController {
     }
 
 
+
     //拒绝选题
     @PostMapping("/refuse")
     @ResponseBody
@@ -211,4 +210,68 @@ public class TeacherController {
     }
 
 
+    @GetMapping("/report")
+    @ResponseBody
+    public Result<List<OrderinfoSimpleReport>>getReport(@Param("thesisId") String thesisId){
+        Teacher teacherById = teacherService.getTeacherById(thesisId);
+        List<Orderinfo> orderInfos = orderInfoService.getOrderByTeacherName(teacherById.getTeacherName());
+        List<OrderinfoSimpleReport> collect = orderInfos.stream().map(orderinfo -> {
+            OrderinfoSimpleReport orderinfoSimpleReport = new OrderinfoSimpleReport();
+            orderinfoSimpleReport.setId(orderinfo.getId());
+            orderinfoSimpleReport.setSisNum(orderinfo.getSisNum());
+            orderinfoSimpleReport.setStudent(orderinfo.getStudent());
+            orderinfoSimpleReport.setThesisCollege(orderinfo.getThesisCollege());
+            orderinfoSimpleReport.setReportDoc(orderinfo.getReportDoc());
+            orderinfoSimpleReport.setReportStatus(orderinfo.getReportStatus());
+            return orderinfoSimpleReport;
+        }).collect(Collectors.toList());
+        return Result.success(collect);
+    }
+
+    @PutMapping("/report")
+    @ResponseBody
+    public Result<Void>checkReport(@Param("sisId") String sisId,Boolean type){
+        Orderinfo orderinfo = new Orderinfo();
+        orderinfo.setId(sisId);
+        orderinfo.setReportStatus(type);
+    orderInfoService.update(orderinfo);
+    return Result.success(null);
+    }
+    @GetMapping("/paper")
+    @ResponseBody
+    public Result<List<OrderinfoSimplePaper>>getPaper(@Param("thesisId") String thesisId){
+        Teacher teacherById = teacherService.getTeacherById(thesisId);
+        List<Orderinfo> orderInfos = orderInfoService.getOrderByTeacherName(teacherById.getTeacherName());
+        List<OrderinfoSimplePaper> collect = orderInfos.stream().map(orderinfo -> {
+            OrderinfoSimplePaper orderinfoSimplePaper = new OrderinfoSimplePaper();
+            orderinfoSimplePaper.setId(orderinfo.getId());
+            orderinfoSimplePaper.setSisNum(orderinfo.getSisNum());
+            orderinfoSimplePaper.setStudent(orderinfo.getStudent());
+            orderinfoSimplePaper.setThesisCollege(orderinfo.getThesisCollege());
+            orderinfoSimplePaper.setPaperDoc(orderinfo.getPaperDoc());
+            orderinfoSimplePaper.setPaperStatus(orderinfo.getPaperStatus());
+            return orderinfoSimplePaper;
+        }).collect(Collectors.toList());
+        return Result.success(collect);
+    }
+
+    @PutMapping("/paper")
+    @ResponseBody
+    public Result<Void>checkPaper(@Param("sisId") String sisId,Boolean type){
+        Orderinfo orderinfo = new Orderinfo();
+        orderinfo.setId(sisId);
+        orderinfo.setPaperStatus(type);
+        orderInfoService.update(orderinfo);
+        return Result.success(null);
+    }
+
+    @PostMapping("/paperGrades")
+    @ResponseBody
+    public Result<Void>paperGrades(@Param("sisId") String sisId,Integer grades){
+        Orderinfo orderinfo = new Orderinfo();
+        orderinfo.setId(sisId);
+        orderinfo.setGrades(grades);
+        orderInfoService.update(orderinfo);
+        return Result.success(null);
+    }
 }

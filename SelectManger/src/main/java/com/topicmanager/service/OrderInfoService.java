@@ -49,4 +49,9 @@ public class OrderInfoService {
         int i = orderInfoMapper.updateByPrimaryKey(orderinfo);
         return i;
     }
+
+    public void update(Orderinfo orderinfo){
+        orderInfoMapper.updateByPrimaryKeySelective(orderinfo);
+    }
+
 }
