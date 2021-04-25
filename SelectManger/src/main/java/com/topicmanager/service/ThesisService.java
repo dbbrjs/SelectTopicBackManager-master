@@ -279,6 +279,9 @@ public class ThesisService {
         orderinfo.setThesisFrom(applythesis.getThesisFrom());
         orderinfo.setThesisType(applythesis.getThesisType());
         orderinfo.setThesisDesc(applythesis.getThesisDesc());
+        orderinfo.setStuNum(applythesis.getThesisId());
+        orderinfo.setCreateTime(new Date());
+        orderinfo.setThesisDate(applythesis.getThesisDate());
         return orderinfo;
     }
     public Applythesis thesisVo_applyThesis(ThesisVo thesisVo) {
